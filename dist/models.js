@@ -14,7 +14,7 @@ const userSchema = new mongoose_1.Schema({
     qrPublicId: { type: String, default: null },
     qrFormat: { type: String, default: null },
     isActive: { type: Boolean, default: true },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 const tokenSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, index: true },
@@ -33,7 +33,7 @@ const vehicleSchema = new mongoose_1.Schema({
     driverMobile: { type: String, required: true, trim: true, maxlength: 24 },
     availabilityStatus: { type: String, enum: ['AVAILABLE', 'RESERVED', 'ON_JOURNEY', 'COMPLETED'], default: 'AVAILABLE' },
     isActive: { type: Boolean, default: true },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 vehicleSchema.index({ isActive: 1, availabilityStatus: 1, vehicleType: 1, capacity: 1 });
 const journeySchema = new mongoose_1.Schema({
@@ -52,7 +52,7 @@ const journeySchema = new mongoose_1.Schema({
     capacityUnit: { type: String, required: true, trim: true, maxlength: 16 },
     status: { type: String, enum: ['AVAILABLE', 'BOOKED', 'ON_JOURNEY', 'COMPLETED', 'CANCELLED'], default: 'AVAILABLE' },
     notes: { type: String, default: null, maxlength: 1000 },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 journeySchema.index({ status: 1, scheduledDate: 1, pickupLocation: 1, destination: 1 });
 const bookingSchema = new mongoose_1.Schema({
@@ -82,7 +82,7 @@ const bookingSchema = new mongoose_1.Schema({
     paymentDeleteAt: { type: Date, default: null },
     paymentDeletedAt: { type: Date, default: null },
     status: { type: String, enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED', 'COMPLETED'], default: 'PENDING', index: true },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 bookingSchema.index({ farmerId: 1, createdAt: -1 });
 bookingSchema.index({ ownerId: 1, createdAt: -1 });
@@ -93,7 +93,7 @@ const tripSchema = new mongoose_1.Schema({
     vehicleId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Vehicle', required: true, index: true },
     ownerId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     status: { type: String, enum: ['RESERVED', 'ON_JOURNEY', 'COMPLETED'], default: 'RESERVED' },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 const notificationSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
@@ -102,7 +102,7 @@ const notificationSchema = new mongoose_1.Schema({
     bookingId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Booking', default: null },
     journeyId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Journey', default: null },
     isRead: { type: Boolean, default: false, index: true },
-    legacySupabaseId: { type: String, default: null, unique: true, sparse: true },
+    legacySupabaseId: { type: String, default: undefined, unique: true, sparse: true },
 }, { timestamps: true, versionKey: false });
 notificationSchema.index({ userId: 1, createdAt: -1 });
 exports.User = (0, mongoose_1.model)('User', userSchema);

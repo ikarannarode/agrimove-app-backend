@@ -47,6 +47,7 @@ function privateImageUrl(publicId, format) {
         throw new errors_1.HttpError(503, 'File delivery is not configured.');
     }
     return cloudinary_1.v2.utils.private_download_url(publicId, format, {
+        type: 'authenticated',
         expires_at: Math.floor(Date.now() / 1000) + 5 * 60,
         attachment: false,
     });

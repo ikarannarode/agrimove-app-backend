@@ -81,6 +81,11 @@ const handleError = (error, _req, res, _next) => {
         return;
     }
     if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
+        const duplicateError = error;
+        if (duplicateError.keyPattern?.email) {
+            res.status(409).json({ error: 'An account with this email already exists.' });
+            return;
+        }
         res.status(409).json({ error: 'A record with those unique details already exists.' });
         return;
     }
