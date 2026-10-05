@@ -1,46 +1,40 @@
-import dns from 'node:dns';
-import nodemailer from 'nodemailer';
+import { BrevoClient } from '@getbrevo/brevo';
 import { env } from '../config';
 
-dns.setDefaultResultOrder('ipv4first');
-
-const transport = env.SMTP_HOST
-  ? nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
-      secure: env.SMTP_SECURE === 'true',
-      auth: env.SMTP_USER
-        ? {
-            user: env.SMTP_USER,
-            pass: env.SMTP_PASSWORD,
-          }
-        : undefined,
-    })
+const brevo = env.BREVO_API_KEY
+  ? new BrevoClient({ apiKey: env.BREVO_API_KEY })
   : null;
+
+const senderMatch = env.EMAIL_FROM.match(/^(.*?)\s*<([^<>]+)>$/);
+const senderName = senderMatch?.[1]?.trim() ?? '';
+const senderEmail = senderMatch?.[2]?.trim() ?? env.EMAIL_FROM.trim();
+const sender = senderName
+  ? { email: senderEmail, name: senderName }
+  : { email: senderEmail };
 
 export async function sendOneTimeCode(
   email: string,
   code: string,
   purpose: 'verify' | 'reset'
 ) {
-  if (!transport) {
+  if (!brevo) {
     throw new Error(
-      'Email service is not configured. Set the SMTP environment variables.'
+      'Email service is not configured. Set the BREVO_API_KEY environment variable.'
     );
   }
 
   const verification = purpose === 'verify';
 
-  await transport.sendMail({
-    from: env.EMAIL_FROM,
-    to: email,
+  await brevo.transactionalEmails.sendTransacEmail({
+    sender,
+    to: [{ email }],
     subject: verification
       ? 'Verify your Smart Krushi email'
       : 'Reset your Smart Krushi password',
-    text: verification
+    textContent: verification
       ? `Your email verification code is ${code}. It expires in ${env.EMAIL_VERIFICATION_MINUTES} minutes.`
       : `Your password reset code is ${code}. It expires in ${env.PASSWORD_RESET_MINUTES} minutes.`,
-    html: `
+    htmlContent: `
       <p>
         ${verification
           ? 'Your email verification code is'
