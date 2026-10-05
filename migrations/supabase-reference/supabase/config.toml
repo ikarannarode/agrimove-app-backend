@@ -1,0 +1,2 @@
+[functions.delete-expired-payment-screenshots]
+verify_jwt = false
