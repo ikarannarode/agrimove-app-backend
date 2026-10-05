@@ -16,6 +16,7 @@
     "migration:import-supabase": "node dist/tools/importSupabase.js"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^6.0.3",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
@@ -27,7 +28,6 @@
     "mongoose": "^8.19.1",
     "multer": "^2.0.2",
     "node-cron": "^4.2.1",
-    "nodemailer": "^10.0.15",
     "socket.io": "^4.8.4",
     "zod": "^4.1.12"
   },

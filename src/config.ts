@@ -13,11 +13,7 @@ const envSchema = z.object({
   EMAIL_VERIFICATION_MINUTES: z.coerce.number().int().min(5).max(1440).default(30),
   PASSWORD_RESET_MINUTES: z.coerce.number().int().min(5).max(120).default(20),
   EMAIL_FROM: z.string().default('Smart Krushi <no-reply@example.com>'),
-  SMTP_HOST: z.string().default(''),
-  SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(587),
-  SMTP_SECURE: z.string().default('false'),
-  SMTP_USER: z.string().default(''),
-  SMTP_PASSWORD: z.string().default(''),
+  BREVO_API_KEY: z.string().default(''),
   CLOUDINARY_CLOUD_NAME: z.string().default(''),
   CLOUDINARY_API_KEY: z.string().default(''),
   CLOUDINARY_API_SECRET: z.string().default(''),
@@ -29,7 +25,7 @@ export const clientOrigins = env.CLIENT_ORIGINS.split(',').map((value) => value.
 export function assertProductionConfiguration() {
   if (env.NODE_ENV !== 'production') return;
   const missing: string[] = [];
-  if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASSWORD) missing.push('SMTP_HOST/SMTP_USER/SMTP_PASSWORD');
+  if (!env.BREVO_API_KEY) missing.push('BREVO_API_KEY');
   if (!env.CLOUDINARY_CLOUD_NAME || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
     missing.push('CLOUDINARY_CLOUD_NAME/CLOUDINARY_API_KEY/CLOUDINARY_API_SECRET');
   }
