@@ -1,12 +1,14 @@
+import dns from 'node:dns';
 import nodemailer from 'nodemailer';
 import { env } from '../config';
+
+dns.setDefaultResultOrder('ipv4first');
 
 const transport = env.SMTP_HOST
   ? nodemailer.createTransport({
       host: env.SMTP_HOST,
       port: env.SMTP_PORT,
       secure: env.SMTP_SECURE === 'true',
-      family: 4,
       auth: env.SMTP_USER
         ? {
             user: env.SMTP_USER,
@@ -39,8 +41,14 @@ export async function sendOneTimeCode(
       ? `Your email verification code is ${code}. It expires in ${env.EMAIL_VERIFICATION_MINUTES} minutes.`
       : `Your password reset code is ${code}. It expires in ${env.PASSWORD_RESET_MINUTES} minutes.`,
     html: `
-      <p>${verification ? 'Your email verification code is' : 'Your password reset code is'}:</p>
-      <p style="font-size:28px;font-weight:bold;letter-spacing:6px">${code}</p>
+      <p>
+        ${verification
+          ? 'Your email verification code is'
+          : 'Your password reset code is'}:
+      </p>
+      <p style="font-size:28px;font-weight:bold;letter-spacing:6px">
+        ${code}
+      </p>
       <p>This code expires soon. If you did not request it, ignore this email.</p>
     `,
   });
